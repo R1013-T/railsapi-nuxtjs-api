@@ -28,8 +28,19 @@ module App
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
+
+    # Railsアプリのタイムゾーンを設定
+    config.time_zone = ENV["TZ"]
+
+    # DBのタイムゾーンを設定
+    config.active_record.default_timezone = :utc
+
+    # Railsアプリのロケールを設定
+    config.i18n.default_locale = :ja
+
+    # Railsアプリのロケールファイルの読み込みパスを設定
+    config.add_autoload_paths_to_load_path = false
+
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Only loads a smaller set of middleware suitable for API only apps.
