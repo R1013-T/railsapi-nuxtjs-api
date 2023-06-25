@@ -1,4 +1,7 @@
+require "validator/email_validator"
 class User < ApplicationRecord
+
+  before_validation :downcase_email
 
   # bcrypt
   # 1. passwordを暗号化する
@@ -15,6 +18,11 @@ class User < ApplicationRecord
             length: {                     # 文字数制限
               maximum: 30,                # 最大文字数
               allow_blank: true           # 空白の場合はスキップ
+            }
+
+  validates :email, presence: true,
+            email: {
+              allow_blank: true
             }
 
   VALID_PASSWORD_REGEX = /\A[\w\-]+\z/
@@ -36,5 +44,28 @@ class User < ApplicationRecord
 
   enum role: { other: 0, sales: 5, designer: 10, engineer: 15, manager: 20 }
   enum permission: { guest: 0, viewer: 5, editor: 10, admin: 15 }
+
+  ## methods
+  # class method  ###########################
+  class << self
+    # emailからアクティブなユーザーを返す
+    def find_by_activated(email)
+      find_by(email: email, activated: true)
+    end
+  end
+  # class method end #########################
+
+  # 自分以外の同じemailのアクティブなユーザーがいる場合にtrueを返す
+  def email_activated?
+    users = User.where.not(id: id)
+    users.find_by_activated(email).present?
+  end
+
+  private
+
+  # email小文字化
+  def downcase_email
+    self.email.downcase! if email
+  end
 
 end
