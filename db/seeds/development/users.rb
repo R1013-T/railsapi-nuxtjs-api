@@ -16,8 +16,8 @@ if admin.new_record?
   admin.name = "admin"
   admin.password = "password"
   admin.admin = true
-  admin.role = :manager
-  admin.permission = :admin
+  admin.role = "manager"
+  admin.permission = "admin"
   admin.save!
 end
 
